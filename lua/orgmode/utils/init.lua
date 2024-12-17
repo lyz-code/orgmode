@@ -417,7 +417,7 @@ end
 function utils.open_tmp_org_window(height, split_mode, border, on_close)
   local prev_winnr = vim.api.nvim_get_current_win()
   utils.open_window(vim.fn.tempname() .. '.org', height or 16, split_mode, border)
-  vim.cmd([[setlocal bufhidden=wipe nobuflisted nolist noswapfile nofoldenable]])
+  vim.cmd([[setlocal filetype=org bufhidden=wipe nobuflisted nolist noswapfile nofoldenable]])
   local bufnr = vim.api.nvim_get_current_buf()
 
   if on_close then
@@ -476,7 +476,6 @@ function utils.open_float(name, opts)
     height = height,
     row = row,
     col = col,
-    style = 'minimal',
     border = opts.border,
   })
 end
@@ -539,6 +538,7 @@ function utils.edit_file(filename)
     end,
     close = function()
       vim.cmd('silent! w')
+      vim.b.org_tmp_edit_window = nil
       if buf_not_already_loaded then
         vim.cmd('silent! bw!')
       else

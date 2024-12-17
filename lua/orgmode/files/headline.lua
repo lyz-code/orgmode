@@ -288,9 +288,9 @@ function Headline:set_tags(tags)
 end
 
 function Headline:align_tags()
-  local current_text, tags_node = self:tags_to_string()
-  if tags_node then
-    self:set_tags(current_text)
+  local own_tags, node = self:get_own_tags()
+  if node then
+    self:set_tags(utils.tags_to_string(own_tags))
   end
 end
 
@@ -556,9 +556,10 @@ function Headline:get_tags()
 
   local all_tags = utils.concat({}, file_tags)
   utils.concat(all_tags, utils.reverse(parent_tags), true)
+  all_tags = config:exclude_tags(all_tags)
   utils.concat(all_tags, tags, true)
 
-  return config:exclude_tags(all_tags), own_tags_node
+  return all_tags, own_tags_node
 end
 
 ---@return OrgHeadline | nil
